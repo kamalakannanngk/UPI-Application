@@ -166,6 +166,13 @@ class TransactionHistoryView {
         }
     }
     
+    static func getDateFromString(_ dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Matches SQLite format
+        formatter.timeZone = TimeZone(abbreviation: "UTC") // SQLite default is UTC
+        return formatter.date(from: dateString)
+    }
+
     static func filterTransactionByDate(transactions: [TransactionHistoryDO], range: DateRange) -> [TransactionHistoryDO] {
         let currentDate = Date()
         let calendar = Calendar.current
@@ -174,27 +181,30 @@ class TransactionHistoryView {
             guard let transactionDate = getDateFromString(transaction.date) else {
                 return false
             }
-            
+
             switch range {
             case .thisMonth:
-                return calendar.isDate(transactionDate, equalTo: currentDate, toGranularity: .month)
+                return calendar.isDate(transactionDate, equalTo: currentDate, toGranularity: .month) &&
+                       calendar.isDate(transactionDate, equalTo: currentDate, toGranularity: .year)
+
             case .last30Days:
-                return transactionDate >= calendar.date(byAdding: .day, value: -30, to: currentDate)!
+                if let pastDate = calendar.date(byAdding: .day, value: -30, to: currentDate) {
+                    return transactionDate >= pastDate
+                }
+                return false
+
             case .last90Days:
-                return transactionDate >= calendar.date(byAdding: .day, value: -90, to: currentDate)!
+                if let pastDate = calendar.date(byAdding: .day, value: -90, to: currentDate) {
+                    return transactionDate >= pastDate
+                }
+                return false
             }
         }
     }
-    
-    static func getDateFromString(_ dateString: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter.date(from: dateString)
-    }
-    
+
     static func printFilteredTransactions(transactions: [TransactionHistoryDO]) {
         print("=======================================")
-        print("ALL TRANSACTIONS")
+        print("FILTERED TRANSACTIONS")
         printTransactions(transactions: transactions)
         print("=======================================")
     }
