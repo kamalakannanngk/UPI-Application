@@ -97,7 +97,7 @@ class AutoRenewalDAO {
         let query = """
         SELECT at.auto_renewal_id, at.UPI_id, at.next_renewal_date, t.amount
         FROM AutoRenewal at
-        JOIN Transaction t
+        JOIN "Transaction" t
         ON at.transaction_id = t.transaction_id
         WHERE next_renewal_date <= datetime('now')
         """
