@@ -79,18 +79,18 @@ actor AutoRenewalController {
     
     func startAutoRenewalProcessing() {
         let queue = DispatchQueue.global(qos: .background)
-        let autoRenewalTimer = DispatchSource.makeTimerSource(queue: queue)
+        self.autoRenewalTimer = DispatchSource.makeTimerSource(queue: queue)
         
-        autoRenewalTimer.schedule(deadline: .now(), repeating: 3600.0)
+        self.autoRenewalTimer?.schedule(deadline: .now(), repeating: 5.0)
 
-        autoRenewalTimer.setEventHandler {
+        self.autoRenewalTimer?.setEventHandler {
             print("Checking for due auto-renewals...")
             Task {
                 await self.processAutoRenewals()
             }
         }
         
-        autoRenewalTimer.resume()
+        self.autoRenewalTimer?.resume()
     }
 }
 
