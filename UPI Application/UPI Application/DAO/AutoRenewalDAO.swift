@@ -128,7 +128,7 @@ class AutoRenewalDAO {
     func updateNextRenewalDate(autoRenewalID: Int) async {
         let query = """
         UPDATE AutoRenewal 
-        SET next_renewal_date = datetime(next_renewal_date, '+1 month') 
+        SET next_renewal_date = datetime(next_renewal_date, '+1 year') 
         WHERE auto_renewal_id = ?
         """
 
