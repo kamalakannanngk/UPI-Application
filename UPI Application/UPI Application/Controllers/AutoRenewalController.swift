@@ -92,5 +92,9 @@ actor AutoRenewalController {
         
         self.autoRenewalTimer?.resume()
     }
+    
+    func checkAutoRenewalForUser(userDO: UserDO, autoRenewalID: Int) async -> Bool {
+        return autoRenewalDAO.checkAutoRenewalForUser(userDO: userDO, autoRenewalID: autoRenewalID)
+    }
 }
 

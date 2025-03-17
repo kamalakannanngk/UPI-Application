@@ -49,6 +49,11 @@ class AutoRenewalView {
                 
                 if let input = readLine(), let autoRenewalId = Int(input) {
                     Task {
+                        if await !AutoRenewalController().checkAutoRenewalForUser(userDO: userDO, autoRenewalID: autoRenewalId) {
+                            print("You do not have an auto renewal with this ID!")
+                            return
+                        }
+                        
                         if await AutoRenewalController().cancelAutoRenewal(autoRenewalId: autoRenewalId) {
                             print("Auto Renewal Cancelled Successfully!")
                         }

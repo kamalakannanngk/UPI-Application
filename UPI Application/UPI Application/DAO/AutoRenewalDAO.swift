@@ -165,8 +165,26 @@ class AutoRenewalDAO {
         return false
     }
     
-    func checkAutoRenewalForUser() {
-        // Testing for github
+    func checkAutoRenewalForUser(userDO: UserDO, autoRenewalID: Int) -> Bool {
+        let query = "SELECT UPI_id FROM AutoRenewal WHERE auto_renewal_id = ?"
+        var upiId: String?
+        do {
+            let resultSet = try db.executeQuery(query, values: [autoRenewalID])
+            if resultSet.next() {
+                upiId = resultSet.string(forColumn: "UPI_id")
+            }
+        } catch {
+            print("Error while checking auto renewal For user: \(error.localizedDescription)")
+        }
+        
+        if let upiId = upiId {
+            let username = UPIDAO().getUserNameByUPI(upiId: upiId)
+            return (username == userDO.username)
+        } else {
+            print("Found UPI Id is nil while checking auto renewal For user")
+        }
+        
+        return false
     }
     
 }
