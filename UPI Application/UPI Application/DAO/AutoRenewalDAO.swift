@@ -165,4 +165,8 @@ class AutoRenewalDAO {
         return false
     }
     
+    func checkAutoRenewalForUser() {
+        // Testing for github
+    }
+    
 }
