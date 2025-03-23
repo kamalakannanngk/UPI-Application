@@ -121,12 +121,12 @@ class UserMenuView {
         var phoneNumber: String
         repeat {
             print("Enter Phone Number: ")
-            if let input = readLine(), !input.isEmpty {
+            if let input = readLine(), input.count == 10 {
                 phoneNumber = input
                 break
             }
             else {
-                print("Phone Number cannot be empty!")
+                print("Invalid Phone Number. Please try again!")
             }
         } while true
                     
